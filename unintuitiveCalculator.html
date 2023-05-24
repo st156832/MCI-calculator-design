@@ -1,0 +1,57 @@
+<html>
+<div onclick="getCenterCoordinates('test')" id="test" style="left: 100px; position: relative; width: 100;height: 100; background-color: red;"></div>
+<div onclick="getCenterCoordinates('test2')" id="test2" style="left: 1000px; position: relative; width: 100;height: 100; background-color: blue;"></div>
+<!-- <div onclick="getDistance('test', 'test2')" id="test" style="left: 100px; position: relative; width: 100;height: 100; background-color: green;"></div> -->
+<!-- <div onclick="interpreter()" id="test" style="left: 100px; position: relative; width: 100;height: 100; background-color: green;"></div> -->
+
+
+<script>
+    let input = "2.00123 * 5.992"
+    let task = []
+    
+    function getCenterCoordinates(id) {
+        e = document.getElementById(id);
+        x = e.offsetLeft + e.offsetWidth / 2;
+        y = e.offsetTop + e.offsetHeight / 2;
+        
+        return [x,y]
+    }
+
+    function getDistance(id1, id2) {
+        co_e1 = getCenterCoordinates(id1);
+        co_e2 = getCenterCoordinates(id2);
+        dist_x = Math.abs(co_e1[0] - co_e2[0]);
+        dist_y = Math.abs(co_e1[1] - co_e2[1]);
+        dist = Math.hypot(dist_x, dist_y);
+
+        return dist
+    }
+
+    function readInput(id) {
+        e = document.getElementById(id);
+        i = e.textContent;
+
+        processInput(i);
+    }
+
+    function processInput(token) {
+        if(token === task[0]) {
+            input.concat(token);
+            console.log(task.shift()) 
+        }
+        //potential error counting
+    }
+
+    function interpreter() {
+        if(task.length > 0) {
+            console.log('equation incomplete!')
+            return;
+        }
+        
+        regex = /[0-9]*\.[0-9]+/g;
+        i = input.match(regex);
+        
+        return i[0] * i[1]
+    }
+</script>
+</html>
