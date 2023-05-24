@@ -1,18 +1,18 @@
 <html>
 <div onclick="getCenterCoordinates('test')" id="test" style="left: 100px; position: relative; width: 100;height: 100; background-color: red;"></div>
 <div onclick="getCenterCoordinates('test2')" id="test2" style="left: 1000px; position: relative; width: 100;height: 100; background-color: blue;"></div>
-<!-- <div onclick="getDistance('test', 'test2')" id="test" style="left: 100px; position: relative; width: 100;height: 100; background-color: green;"></div> -->
-<!-- <div onclick="interpreter()" id="test" style="left: 100px; position: relative; width: 100;height: 100; background-color: green;"></div> -->
+<div onclick="getDistance('test', 'test2')" id="test" style="left: 100px; position: relative; width: 100;height: 100; background-color: green;"></div>
+<div onclick="evalInput()" id="test" style="left: 100px; position: relative; width: 100;height: 100; background-color: yellow;"></div>
 
 
 <script>
-    let input = "2.00123 * 5.992"
-    let task = []
+    let user_input = ''
+    let task = ''
     
     function getCenterCoordinates(id) {
-        e = document.getElementById(id);
-        x = e.offsetLeft + e.offsetWidth / 2;
-        y = e.offsetTop + e.offsetHeight / 2;
+        element = document.getElementById(id);
+        x = element.offsetLeft + element.offsetWidth / 2;
+        y = element.offsetTop + element.offsetHeight / 2;
         
         return [x,y]
     }
@@ -27,29 +27,34 @@
         return dist
     }
 
+    function generateTask() {
+        return (Math.random()).toFixed(2) + ' * ' + (Math.random()).toFixed(2)
+    }
+
     function readInput(id) {
-        e = document.getElementById(id);
-        i = e.textContent;
+        element = document.getElementById(id);
+        input = element.textContent;
 
-        processInput(i);
+        processInput(input);
     }
 
-    function processInput(token) {
-        if(token === task[0]) {
-            input.concat(token);
-            console.log(task.shift()) 
-        }
-        //potential error counting
+    function processInput(input) {
+        token = task.slice(0, input.length)
+        
+        if(token === input) {
+            user_input.concat(token);
+            task = task.slice(input.length)
+        } //else... potential error counting
     }
 
-    function interpreter() {
+    function evalInput() {
         if(task.length > 0) {
             console.log('equation incomplete!')
             return;
         }
         
         regex = /[0-9]*\.[0-9]+/g;
-        i = input.match(regex);
+        i = user_input.match(regex);
         
         return i[0] * i[1]
     }
