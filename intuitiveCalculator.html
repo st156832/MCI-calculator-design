@@ -16,7 +16,7 @@
         x = element.offsetLeft + element.offsetWidth / 2;
         y = element.offsetTop + element.offsetHeight / 2;
         
-        return [x,y]
+        return [x,y];
     }
 
     function getDistance(id1, id2) {
@@ -26,15 +26,32 @@
         dist_y = Math.abs(co_e1[1] - co_e2[1]);
         dist = Math.hypot(dist_x, dist_y);
 
-        return dist
+        return dist;
     }
 
     function generateTask() {
-        return (Math.random()).toFixed(2) + ' * ' + (Math.random()).toFixed(2)
+        return (Math.random()).toFixed(2) + ' * ' + (Math.random()).toFixed(2);
     }
 
-    function calcID(task) {
-        //TODO
+    function calcID() {
+        let element
+        let distance = 0
+
+        //ID is the total distance between all buttons needed to be pressed
+        for (let i = 0; i < task.length; i++) {
+            if(typeof lastTimestamp !== 'undefined') {
+                element = task[i];
+            } else {
+                distances += getDistance(element, task[i]);
+                element = task[i];
+            }
+         }
+
+         return distance;
+    }
+
+    function getTotalTime() {
+        return times.reduce((partialSum, a) => partialSum + a, 0);
     }
 
     function logTime() {
@@ -42,7 +59,7 @@
             times.push(Date.now() - lastTimestamp);
         }
         
-        lastTimestamp = Date.now()
+        lastTimestamp = Date.now();
     }
 
     function readInput(id) {
@@ -53,26 +70,26 @@
     }
 
     function processInput(input) {
-        token = task.slice(0, input.length)
+        token = task.slice(0, input.length);
         
         if(token === input) {
             user_input.concat(token);
-            task = task.slice(input.length)
-            logTime()
+            task = task.slice(input.length);
+            logTime();
         } //else... potential error counting
     }
 
     function evalInput() {
         if(task.length > 0) {
-            console.log('equation incomplete!')
+            console.log('equation incomplete!');
             return;
         }
         
         regex = /[0-9]*\.[0-9]+/g;
         i = user_input.match(regex);
-        logTime()
+        logTime();
 
-        return i[0] * i[1]
+        return i[0] * i[1];
     }
 </script>
 </html>
