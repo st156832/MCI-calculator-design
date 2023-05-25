@@ -1,15 +1,102 @@
 <html>
-<div onclick="getCenterCoordinates('test')" id="test" style="left: 100px; position: relative; width: 100;height: 100; background-color: red;"></div>
-<div onclick="getCenterCoordinates('test2')" id="test2" style="left: 1000px; position: relative; width: 100;height: 100; background-color: blue;"></div>
-<div onclick="getDistance('test', 'test2')" id="test" style="left: 100px; position: relative; width: 100;height: 100; background-color: green;"></div>
-<div onclick="evalInput()" id="test" style="left: 100px; position: relative; width: 100;height: 100; background-color: yellow;"></div>
+<div class="root"> 
+    <div class="calculator">
+        <div class="box" onclick="readInput(this.id)" id="0">0</div>
+        <div class="box" onclick="readInput(this.id)" id="1">1</div>
+        <div class="box" onclick="readInput(this.id)" id="2" >2</div>
+        <div class="box" onclick="readInput(this.id)" id="3">3</div>
+        <div class="box" onclick="readInput(this.id)" id="4" >4</div>
+        <div class="box" onclick="readInput(this.id)" id="5">5</div>
+        <div class="box" onclick="readInput(this.id)" id="6" >6</div>
+        <div class="box" onclick="readInput(this.id)" id="7">7</div>
+        <div class="box" onclick="readInput(this.id)" id="8" >8</div>
+        <div class="box" onclick="readInput(this.id)" id="9">9</div>
+        <div class="box" onclick="readInput(this.id)" id="." >.</div>
+        <div class="box" onclick="readInput(this.id)" id="*" > * </div>
+        <div class="box" onclick="endExperiment()" id="=" >=</div>
+    </div>
+    <div class="button">
+        <a id="button" onclick="startExperiment()">Get a Task</a>
+        <a id="task"></a>
+    </div>
+    <div class="results">
+        <p class="point" id="value"></p>
+        <p class="point" id="time"></p>
+        <p class="point" id="difficulty"></p>
+    </div>
+</div>
+<style>
+    #button {
+        border: 4px solid black;
+        padding: 10px;
+        
+    }
+
+    .point {
+        margin-left: 20px;
+    }
+
+    .calculator {
+        display: flex;
+        justify-content: space-between;
+        margin: 100px;
+    }
+
+    .root {}
+
+    .results {
+        display: flex;
+        justify-content: center;
+        font-size: xx-large;
+    }
+
+    .button {
+        display: flex;
+        justify-content: center;
+        font-size: xx-large;
+    }
+
+    .box {
+        position: relative;
+        width: 80;
+        height: 80;
+        background-color: lightgrey;
+        color: black;
+        border: 4px solid black;
+        text-align: center;
+        line-height: 80px;
+        font-size: xx-large;
+    }
 
 
+</style>
 <script>
     let user_input = ''
     let task = ''
     let times = []
     let lastTimestamp
+    let difficulty
+    
+    function startExperiment() {
+        task = generateTask()
+        difficulty = calcID()
+
+        buttonE = document.getElementById('button');
+        taskE = document.getElementById('task');
+
+        buttonE.style.display = 'none';
+        taskE.textContent = task + ' =';
+    }
+
+    function endExperiment() {
+        document.getElementById('value').textContent = 'Result :' + evalInput().toFixed(4);
+        document.getElementById('time').textContent = 'Time :' + getTotalTime() +'ms';
+        document.getElementById('difficulty').textContent = 'Difficulty Index: ' + difficulty;
+    }
+
+    function updateTask(str) {
+        taskE.textContent = str;
+    }
     
     function getCenterCoordinates(id) {
         element = document.getElementById(id);
@@ -27,7 +114,7 @@
         dist = Math.hypot(dist_x, dist_y);
 
         return dist;
-    }
+    }    
 
     function generateTask() {
         return (Math.random()).toFixed(2) + ' * ' + (Math.random()).toFixed(2);
@@ -36,14 +123,20 @@
     function calcID() {
         let element
         let distance = 0
+        let str = task.replace(/\s/g, "");
+        console.log(str)
 
         //ID is the total distance between all buttons needed to be pressed
-        for (let i = 0; i < task.length; i++) {
-            if(typeof lastTimestamp !== 'undefined') {
-                element = task[i];
+        for (let i = 0; i < str.length; i++) {
+                       
+            if(typeof element === 'undefined') {
+                element = str[i];
+                console.log(element + "tt")
             } else {
-                distances += getDistance(element, task[i]);
-                element = task[i];
+                console.log(element)
+                distance += getDistance(element, str[i]);
+                element = str[i];
+                
             }
          }
 
@@ -71,11 +164,12 @@
 
     function processInput(input) {
         token = task.slice(0, input.length);
-        
         if(token === input) {
-            user_input.concat(token);
+            user_input = user_input.concat(token);
             task = task.slice(input.length);
             logTime();
+            
+            updateTask(task + ' =')
         } //else... potential error counting
     }
 
@@ -88,6 +182,7 @@
         regex = /[0-9]*\.[0-9]+/g;
         i = user_input.match(regex);
         logTime();
+        updateTask('Success');
 
         return i[0] * i[1];
     }
