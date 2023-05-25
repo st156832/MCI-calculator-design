@@ -124,19 +124,14 @@
         let element
         let distance = 0
         let str = task.replace(/\s/g, "");
-        console.log(str)
-
+ 
         //ID is the total distance between all buttons needed to be pressed
         for (let i = 0; i < str.length; i++) {
-                       
             if(typeof element === 'undefined') {
                 element = str[i];
-                console.log(element + "tt")
             } else {
-                console.log(element)
                 distance += getDistance(element, str[i]);
                 element = str[i];
-                
             }
          }
 
