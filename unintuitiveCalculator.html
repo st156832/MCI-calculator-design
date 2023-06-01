@@ -45,6 +45,12 @@
         margin: 100px;
     }
 
+    .root {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
     .results {
         display: flex;
         justify-content: center;
@@ -67,7 +73,8 @@
         text-align: center;
         line-height: 80px;
         font-size: xx-large;
-    }
+        margin-right: 5px;
+}
 </style>
 <script>
     let user_input = ''
@@ -90,13 +97,13 @@
     }
 
     function endExperiment() {
-        document.getElementById('value').textContent = 'Result :' + evalInput().toFixed(4);
-        document.getElementById('time').textContent = 'Time :' + getTotalTime() + 'ms';
+        document.getElementById('value').textContent = 'Result: ' + evalInput().toFixed(4);
+        document.getElementById('time').textContent = 'Time: ' + getTotalTime() + 'ms';
         document.getElementById('difficulty').textContent = 'Difficulty Index: ' + difficulty;
 
         results.push([getTotalTime(), difficulty, outputTask])
 
-        if (results.length == 20) {
+        if (results.length == 5) {
             downloadResults();
         }
     }
