@@ -202,19 +202,20 @@
     function calcID() {
         let element
         let str = task.replace(/\s/g, "");
-        let ID = [Math.log2(getDistance("start", str[0]) / 80 + 1)]
+        let ID = [Math.log2(getDistance("start", str[0]) / document.getElementById(str[0]).offsetWidth + 1)]
 
         //ID is the total distance between all buttons needed to be pressed
         for (let i = 0; i < str.length; i++) {
             if (typeof element === 'undefined') {
                 element = str[i];
             } else {
-                ID.push(Math.log2(getDistance(element, str[i])) / 80 + 1);
+                ID.push(Math.log2(getDistance(element, str[i])) / document.getElementById(str[i]).offsetWidth + 1);
+                console.log(document.getElementById(str[i]).offsetWidth)
                 element = str[i];
             }
         }
 
-        ID.push(Math.log2(getDistance(str[8], "=")) / 80 + 1);
+        ID.push(Math.log2(getDistance(str[8], "=")) / 173 + 1);
 
         return ID;
     }
