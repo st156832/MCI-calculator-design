@@ -24,13 +24,9 @@
         <p class="point" id="time"></p>
         <p class="point" id="difficulty"></p>
     </div>
-    <div class="button">
-        <a id="next" style="display: none;" onclick="startExperiment()">Get a new Task</a>
-    </div>
 </div>
 <style>
-    #start,
-    #next {
+    #start {
         border: 4px solid black;
         padding: 10px;
     }
@@ -88,11 +84,9 @@
         reset()
 
         start = document.getElementById('start');
-        next = document.getElementById('next');
         taskElement = document.getElementById('task');
 
         start.style.display = 'none';
-        next.style.display = 'none';
         taskElement.textContent = task + ' =';
     }
 
@@ -135,6 +129,7 @@
         document.getElementById('value').textContent = ''
         document.getElementById('time').textContent = '';
         document.getElementById('difficulty').textContent = '';
+        document.getElementById('task').style.removeProperty('display');
 
         task = generateTask();
         outputTask = task;
@@ -230,8 +225,9 @@
         regex = /[0-9]*\.[0-9]+/g;
         i = user_input.match(regex);
         logTime();
-        updateTask('Success!');
-        document.getElementById('next').style.removeProperty('display');
+        updateTask('');
+        document.getElementById('task').style.display = 'none';
+        document.getElementById('start').style.removeProperty('display');
 
         return i[0] * i[1];
     }
