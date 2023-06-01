@@ -108,12 +108,13 @@
     let task = ''
     let times = []
     let lastTimestamp = null
-    let difficulty
+    let difficulty = []
     let results = []
+    let outputTask
 
     function startExperiment() {
         reset()
-
+        logTime()
         start = document.getElementById('start');
         taskElement = document.getElementById('task');
 
@@ -124,10 +125,9 @@
     function endExperiment() {
         document.getElementById('value').textContent = 'Result: ' + evalInput().toFixed(4);
         document.getElementById('time').textContent = 'Time: ' + getTotalTime() + 'ms';
-        document.getElementById('difficulty').textContent = 'Difficulty Index: ' + difficulty.toFixed(0);
 
-        results.push([getTotalTime(), difficulty, outputTask])
-
+        results.push([times, difficulty, outputTask])
+        
         if (results.length == 20) {
             downloadResults()
         }
@@ -201,20 +201,22 @@
 
     function calcID() {
         let element
-        let distance = 0
         let str = task.replace(/\s/g, "");
+        let ID = [Math.log2(getDistance("start", str[0]) / 80 + 1)]
 
         //ID is the total distance between all buttons needed to be pressed
         for (let i = 0; i < str.length; i++) {
             if (typeof element === 'undefined') {
                 element = str[i];
             } else {
-                distance += getDistance(element, str[i]);
+                ID.push(Math.log2(getDistance(element, str[i])) / 80 + 1);
                 element = str[i];
             }
         }
 
-        return distance;
+        ID.push(Math.log2(getDistance(str[8], "=")) / 80 + 1);
+
+        return ID;
     }
 
     function getTotalTime() {
