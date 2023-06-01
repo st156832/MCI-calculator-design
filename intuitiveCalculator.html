@@ -30,7 +30,7 @@
     <div class="results">
         <p class="point" id="value"></p>
         <p class="point" id="time"></p>
-        <p class="point" id="difficulty"></p>
+        <p class="point" id="difficultyIndex"></p>
     </div>
 </div>
 <style>
@@ -108,7 +108,7 @@
     let task = ''
     let times = []
     let lastTimestamp = null
-    let difficulty = []
+    let difficultyIndex = []
     let results = []
     let outputTask
 
@@ -126,7 +126,7 @@
         document.getElementById('value').textContent = 'Result: ' + evalInput().toFixed(4);
         document.getElementById('time').textContent = 'Time: ' + getTotalTime() + 'ms';
 
-        results.push([times, difficulty, outputTask])
+        results.push([times, difficultyIndex, outputTask])
         
         if (results.length == 20) {
             downloadResults()
@@ -159,12 +159,12 @@
     function reset() {
         document.getElementById('value').textContent = ''
         document.getElementById('time').textContent = '';
-        document.getElementById('difficulty').textContent = '';
+        document.getElementById('difficultyIndex').textContent = '';
         document.getElementById('task').style.removeProperty('display');
 
         task = generateTask();
         outputTask = task;
-        difficulty = calcID();
+        difficultyIndex = calcID();
         user_input = '';
         times = [];
         lastTimestamp = null;
@@ -209,7 +209,7 @@
             if (typeof element === 'undefined') {
                 element = str[i];
             } else {
-                ID.push(Math.log2(getDistance(element, str[i])) / (document.getElementById(str[0]).offsetWidth - 8) + 1);
+                ID.push(Math.log2((getDistance(element, str[i]) / document.getElementById(str[0]).offsetWidth -8) + 1));
                 console.log(document.getElementById(str[i]).offsetWidth)
                 element = str[i];
             }
