@@ -1,19 +1,19 @@
 <html>
-<div class="root"> 
+<div class="root">
     <div class="calculator">
         <div class="box" onclick="readInput(this.id)" id="0">0</div>
         <div class="box" onclick="readInput(this.id)" id="1">1</div>
-        <div class="box" onclick="readInput(this.id)" id="2" >2</div>
+        <div class="box" onclick="readInput(this.id)" id="2">2</div>
         <div class="box" onclick="readInput(this.id)" id="3">3</div>
-        <div class="box" onclick="readInput(this.id)" id="4" >4</div>
+        <div class="box" onclick="readInput(this.id)" id="4">4</div>
         <div class="box" onclick="readInput(this.id)" id="5">5</div>
-        <div class="box" onclick="readInput(this.id)" id="6" >6</div>
+        <div class="box" onclick="readInput(this.id)" id="6">6</div>
         <div class="box" onclick="readInput(this.id)" id="7">7</div>
-        <div class="box" onclick="readInput(this.id)" id="8" >8</div>
+        <div class="box" onclick="readInput(this.id)" id="8">8</div>
         <div class="box" onclick="readInput(this.id)" id="9">9</div>
-        <div class="box" onclick="readInput(this.id)" id="." >.</div>
-        <div class="box" onclick="readInput(this.id)" id="*" > * </div>
-        <div class="box" onclick="endExperiment()" id="=" >=</div>
+        <div class="box" onclick="readInput(this.id)" id=".">.</div>
+        <div class="box" onclick="readInput(this.id)" id="*"> * </div>
+        <div class="box" onclick="endExperiment()" id="=">=</div>
     </div>
     <div class="button">
         <a id="start" onclick="startExperiment()">Get a Task</a>
@@ -29,7 +29,8 @@
     </div>
 </div>
 <style>
-    #start, #next {
+    #start,
+    #next {
         border: 4px solid black;
         padding: 10px;
     }
@@ -47,7 +48,7 @@
     .results {
         display: flex;
         justify-content: center;
-        font-size: xx-large;
+        font-size: x-large;
     }
 
     .button {
@@ -67,8 +68,6 @@
         line-height: 80px;
         font-size: xx-large;
     }
-
-
 </style>
 <script>
     let user_input = ''
@@ -80,7 +79,7 @@
 
     function startExperiment() {
         reset()
-        
+
         start = document.getElementById('start');
         next = document.getElementById('next');
         taskElement = document.getElementById('task');
@@ -92,10 +91,33 @@
 
     function endExperiment() {
         document.getElementById('value').textContent = 'Result :' + evalInput().toFixed(4);
-        document.getElementById('time').textContent = 'Time :' + getTotalTime() +'ms';
+        document.getElementById('time').textContent = 'Time :' + getTotalTime() + 'ms';
         document.getElementById('difficulty').textContent = 'Difficulty Index: ' + difficulty;
 
-        results.push([getTotalTime(), difficulty, task])
+        results.push([getTotalTime(), difficulty, outputTask])
+
+        if (results.length == 20) {
+            downloadResults();
+        }
+    }
+
+    function downloadResults() {
+        const rows = [["MT", "ID", "Task"]].concat(results);
+
+        let csvContent = "data:text/csv;charset=utf-8,";
+
+        rows.forEach(function (rowArray) {
+            let row = rowArray.join(",");
+            csvContent += row + "\r\n";
+        });
+
+        var encodedUri = encodeURI(csvContent);
+        var link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "results.csv");
+        document.body.appendChild(link); // Required for Firefox
+        link.click();
+        document.body.removeChild(link);
     }
 
     function updateTask(str) {
@@ -108,18 +130,19 @@
         document.getElementById('difficulty').textContent = '';
 
         task = generateTask();
+        outputTask = task;
         difficulty = calcID();
         user_input = '';
         times = [];
-        lastTimestamp = null;        
+        lastTimestamp = null;
     }
-    
+
     function getCenterCoordinates(id) {
         element = document.getElementById(id);
         x = element.offsetLeft + element.offsetWidth / 2;
         y = element.offsetTop + element.offsetHeight / 2;
-        
-        return [x,y];
+
+        return [x, y];
     }
 
     function getDistance(id1, id2) {
@@ -130,28 +153,35 @@
         dist = Math.hypot(dist_x, dist_y);
 
         return dist;
-    }    
+    }
 
     function generateTask() {
-        return (Math.random()).toFixed(2) + ' * ' + (Math.random()).toFixed(2);
+        return generateRandomNumber() + ' * ' + generateRandomNumber();
+    }
+
+    function generateRandomNumber() {
+        var randomNumber = Math.floor(Math.random() * 999) + 1;
+        var decimalNumber = randomNumber / 100;
+        var fixedNumber = decimalNumber.toFixed(2);
+        return fixedNumber;
     }
 
     function calcID() {
         let element
         let distance = 0
         let str = task.replace(/\s/g, "");
- 
+
         //ID is the total distance between all buttons needed to be pressed
         for (let i = 0; i < str.length; i++) {
-            if(typeof element === 'undefined') {
+            if (typeof element === 'undefined') {
                 element = str[i];
             } else {
                 distance += getDistance(element, str[i]);
                 element = str[i];
             }
-         }
+        }
 
-         return distance;
+        return distance;
     }
 
     function getTotalTime() {
@@ -159,10 +189,10 @@
     }
 
     function logTime() {
-        if(lastTimestamp) {
+        if (lastTimestamp) {
             times.push(Date.now() - lastTimestamp);
         }
-        
+
         lastTimestamp = Date.now();
     }
 
@@ -175,28 +205,29 @@
 
     function processInput(input) {
         token = task.slice(0, input.length);
-        if(token === input) {
+        if (token === input) {
             user_input = user_input.concat(token);
             task = task.slice(input.length);
             logTime();
-            
+
             updateTask(task + ' =')
         } //else... potential error counting
     }
 
     function evalInput() {
-        if(task.length > 0) {
+        if (task.length > 0) {
             console.log('equation incomplete!');
             return;
         }
-        
+
         regex = /[0-9]*\.[0-9]+/g;
         i = user_input.match(regex);
         logTime();
         updateTask('Success!');
-        document.getElementById('next').style.removeProperty( 'display' );
+        document.getElementById('next').style.removeProperty('display');
 
         return i[0] * i[1];
     }
 </script>
+
 </html>
