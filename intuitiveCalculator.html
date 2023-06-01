@@ -209,7 +209,7 @@
             if (typeof element === 'undefined') {
                 element = str[i];
             } else {
-                ID.push(Math.log2((getDistance(element, str[i]) / document.getElementById(str[0]).offsetWidth -8) + 1));
+                ID.push(Math.log2(getDistance(element, str[i]) / (document.getElementById(str[0]).offsetWidth - 8) + 1));
                 console.log(document.getElementById(str[i]).offsetWidth)
                 element = str[i];
             }
