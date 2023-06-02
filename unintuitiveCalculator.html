@@ -94,10 +94,14 @@
     function endExperiment() {
         document.getElementById('value').textContent = 'Result: ' + evalInput().toFixed(4);
         document.getElementById('time').textContent = 'Time: ' + getTotalTime() + 'ms';
-        
-        results.push([times, difficultyIndex, outputTask])
+        let idSum = 0
+        for (let x of difficultyIndex){
+            idSum += x;
+        }
 
-        if (results.length == 20) {
+        results.push([getTotalTime(), idSum, outputTask])
+        
+        if (results.length == 5) {
             downloadResults();
         }
     }

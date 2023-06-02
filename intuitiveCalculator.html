@@ -125,10 +125,14 @@
     function endExperiment() {
         document.getElementById('value').textContent = 'Result: ' + evalInput().toFixed(4);
         document.getElementById('time').textContent = 'Time: ' + getTotalTime() + 'ms';
+        let idSum = 0
+        for (let x of difficultyIndex){
+            idSum += x;
+        }
 
-        results.push([times, difficultyIndex, outputTask])
+        results.push([getTotalTime(), idSum, outputTask])
         
-        if (results.length == 20) {
+        if (results.length == 5) {
             downloadResults()
         }
     }
